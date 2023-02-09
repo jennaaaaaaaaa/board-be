@@ -1,11 +1,5 @@
 {
-  "development": {
-    "username": "root",
-    "password": "aaaa1234",
-    "database": "sparta",
-    "host": "tagged-bulletin-board.co1fxdg1r34x.ap-northeast-2.rds.amazonaws.com",
-    "dialect": "mysql"
-  },
+  
   "test": {
     "username": "root",
     "password": null,
