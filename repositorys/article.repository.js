@@ -1,6 +1,7 @@
-class ArticleRepository {
-  constructor(ArticleModel) {
+class MainRepository {
+  constructor(ArticleModel, TagModel) {
     this.articleModel = ArticleModel;
+    this.tagModel = TagModel;
   }
 
   findAllArticles = async () => {
@@ -9,9 +10,7 @@ class ArticleRepository {
     });
   };
 
-  postArticle = async (title, contents, user_id) => {
-    return await this.articleModel.create({ title, contents, user_id });
-  };
+  
 }
 
-module.exports = ArticleRepository;
+module.exports = MainRepository;
