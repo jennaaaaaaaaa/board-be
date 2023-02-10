@@ -7,6 +7,10 @@ class ArticleService {
   findAllArticles = async () => {
     return this.articleRepository.findAllArticles()
   }
+
+  postArticle = async(title, contents, user_id) => {
+    return this.articleRepository.postArticle(title, contents, user_id)
+  }
 }
 
 module.exports = ArticleService

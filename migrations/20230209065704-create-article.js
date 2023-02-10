@@ -15,9 +15,7 @@ module.exports = {
       contents: {
         type: Sequelize.STRING
       },
-      count: {
-        type: Sequelize.INTEGER
-      },
+      count: { type: Sequelize.INTEGER, defaultValue: 0 },
       user_id: {
         type: Sequelize.INTEGER
       },
