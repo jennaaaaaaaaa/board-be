@@ -9,9 +9,9 @@ class ArticleRepository {
     });
   };
 
-  postArticle = async (title, contents, user_id) => {
-    return await this.articleModel.create({ title, contents, user_id });
-  };
+  findOneArticle = async (id) => {
+    return await this.articleModel.findByPk(id)
+  }
 }
 
 module.exports = ArticleRepository;

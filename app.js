@@ -1,7 +1,7 @@
 const express = require("express")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
-const {corsOptions} = require("./config/config")
+const {corsOptions} = require("./util/config")
 const a = require("./util/redis.js")
 const router = require("./routes/routes")
 
