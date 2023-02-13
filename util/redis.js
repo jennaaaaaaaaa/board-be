@@ -1,7 +1,6 @@
-// const { resolve } = require("bluebird");
 // const redis = require("redis")
-// const ArticleRepository = require("../repository/article")
-// const articleRepository = new ArticleRepository();
+// const TagService = require("../services/tag.service");
+// const tagService = new TagService();
 
 // const client = redis.createClient();
 
@@ -11,10 +10,12 @@
 // const a = (async() => {
 //   await client.connect()
 //   while (true) {
-//     const count = await articleRepository.allCountPage()
+//     const todayTop10 = await tagService.tags()
 
 //     await new Promise((resolve) => {
-//       client.set("articles_count", count)
+//       for (let i = 0; i < 10; i++) {
+//         client.set("articles_count" + [i], todayTop10[i].name)
+//       }
 //       setTimeout(resolve, 180000)
 //     })
 //   }
