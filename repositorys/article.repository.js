@@ -9,9 +9,7 @@ class ArticleRepository {
     });
   };
 
-  postArticle = async (title, contents, user_id) => {
-    return await this.articleModel.create({ title, contents, user_id });
-  };
+  
 }
 
 module.exports = ArticleRepository;
