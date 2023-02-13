@@ -1,15 +1,21 @@
 const UserService = require("../services/users.service")
+const {signupValidation} = require("../middleware/validation")
 
 class UserController {
   userService = new UserService()
 
   signup = async (req, res) => {
-    const {name, email, password, confirm} = req.body
-
-    const {status, message} = await this.userService.signup(name, email, password, confirm)
-    console.log(status)
-
-    res.status(status).json(message)
+    try {
+      const {name, email, password, confirm} = await signupValidation.validateAsync(req.body)
+  
+      const {status, message} = await this.userService.signup(name, email, password)
+  
+      res.status(status).json(message)
+    } catch (err) {
+      if (err.isJoi) {
+        return res.status(422).json({message: err.details[0].message})
+      }
+    }
   }
 
   login = async (req,res) => {

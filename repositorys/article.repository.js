@@ -9,9 +9,7 @@ class ArticleRepository {
     });
   };
 
-  findOneArticle = async (id) => {
-    return await this.articleModel.findByPk(id)
-  }
+  
 }
 
 module.exports = ArticleRepository;

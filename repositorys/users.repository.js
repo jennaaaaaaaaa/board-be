@@ -12,10 +12,6 @@ class UserRepository {
     return await this.userModel.findAll({where: {email}})
   }
 
-  checkUserByEmailPassword = async (email, password) => {
-    return await this.userModel.findAll({where: {email, password}})
-  }
-
   userInfoAndArticles = async (id) => {
     const info = await this.userModel.findByPk(id, {
       attributes: ["name", "email"],
