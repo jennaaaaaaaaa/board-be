@@ -4,13 +4,16 @@ class ArticleRepository {
     this.tagModel = TagModel;
   }
 
-  findAllArticles = async () => {
-    return await this.articleModel.findAll({
+  findAllArticles = async (page) => {
+    const { count, rows } = await this.articleModel.findAndCountAll({
       attributes: ["title", "contents", "count"],
+      offset: (page - 1) * 8,
+      limit: 8,
+      order: [["id", "DESC"]],
     });
-  };
 
-  
+    return { count, rows };
+  };
 }
 
 module.exports = ArticleRepository;
