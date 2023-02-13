@@ -11,7 +11,7 @@ class UserService {
     const alreadyUser = await this.userRepository.findUser(email);
 
     if (alreadyUser[0]) {
-      return { status: 409, message: "이미 존재하는 이메일 입니다." };
+      return { status: 409 };
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
