@@ -7,6 +7,7 @@ const client = redis.createClient();
 client.on('error', err => console.log('Redis Client Error', err));
 client.on('connect', () => console.log('Redis Client connect'));
 
+
 const a = (async() => {
   await client.connect()
   while (true) {
@@ -14,11 +15,11 @@ const a = (async() => {
 
     await new Promise((resolve) => {
       for (let i = 0; i < todayTop10.length; i++) {
-        client.set("articles_count" + [i], todayTop10[i].name)
+        client.set(`${i}`, todayTop10[i].name)
       }
       setTimeout(resolve, 86400000)
     })
   }
 })()
 
-module.exports = {a, client}
+module.exports = client
