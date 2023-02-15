@@ -1,8 +1,9 @@
-const { Tag, Article_Tag_Mapping } = require("../models");
+const { Tag, Article_Tag_Mapping, Article } = require("../models");
 const TagRepository = require("../repositorys/tag.repository");
+const client = require("../util/redis")
 
 class TagService {
-  tagRepository = new TagRepository(Tag, Article_Tag_Mapping);
+  tagRepository = new TagRepository(Tag, Article_Tag_Mapping, Article);
 
   tags = async () => {
     const Allcount = await this.tagRepository.countTag();
@@ -20,22 +21,39 @@ class TagService {
     return names;
   };
 
-  getRedis = async () => {    
-    const client = require("../util/redis")
-    
-    let memoryArr = [];
+  redis = (async() => {
+    while (true) {
+      const todayTop10 = await this.tags()
+  
+      await new Promise((resolve) => {
+        for (let i = 0; i < todayTop10.length; i++) {
+          client.set(`${i}`, todayTop10[i].name)
+        }
+        setTimeout(resolve, 86400000)
+      })
+    }
+  })()
 
-    const memoryLength = await client.dbSize();
+  getRedis = async () => {
+    let cacheArr = [];
 
-    if (memoryLength > 0) {
-      for (let i = 0; i < memoryLength; i++) {
+    const cacheLength = await client.dbSize();
+
+    if (cacheLength > 0) {
+      for (let i = 0; i < cacheLength; i++) {
         const tag = await client.get(`${i}`);
-        memoryArr.push(tag);
+        cacheArr.push(tag);
       }
-      return memoryArr
+      return cacheArr
     }
 
     this.tags()
+  }
+
+  findArticleByTag = async (tag) => {
+    const articles = await this.tagRepository.findArticleByTag(tag)
+
+    return {tag : articles[0].tag, articles : articles[0].Article_Tag_Mappings}
   }
 }
 
