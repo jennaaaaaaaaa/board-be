@@ -1,8 +1,8 @@
 const { User, Article } = require("../models");
 const UserRepository = require("../repositorys/users.repository");
 const jwt = require("jsonwebtoken")
-const bcrypt = require("bcrypt")
-const {jwtConfig} = require("../util/config")
+const bcrypt = require("bcryptjs")
+const { jwtConfig } = require("../util/config")
 
 class UserService {
   userRepository = new UserRepository(User, Article);
@@ -26,18 +26,18 @@ class UserService {
     const isPasswordCorrect = await bcrypt.compare(password, user[0].password)
 
     if (!user || !isPasswordCorrect) {
-      return res.status(400).json({message: "이메일 또는 비밀번호가 틀렸습니다."})
+      return res.status(400).json({ message: "이메일 또는 비밀번호가 틀렸습니다." })
     }
 
-    const cookie = jwt.sign({id : user.id}, jwtConfig.secretKey, jwtConfig.options)
+    const cookie = jwt.sign({ id: user.id }, jwtConfig.secretKey, jwtConfig.options)
 
-    return {status: 200, message: "로그인", cookie}
+    return { status: 200, message: "로그인", cookie }
   }
 
   getUserInfo = async (id) => {
     const info = await this.userRepository.userInfoAndArticles(id)
 
-    return {status: 200, info}
+    return { status: 200, info }
   }
 }
 

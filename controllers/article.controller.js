@@ -25,9 +25,9 @@ class ArticleController {
     res.json({ message: message })
   };
 
+  //게시글 상세 조회
   findOneArticle = async (req, res) => {
     const { id: article_id } = req.params
-
 
     const oneArticle = await this.articleService.findOneArticle(article_id)
 
@@ -36,13 +36,18 @@ class ArticleController {
     }
 
     res.json({ data: oneArticle })
-
   }
 
-  // patchArticle = async (req, res) => {
+  //게시글 수정
+  patchArticle = async (req, res) => {
+    const { id } = res.local.user
 
 
-  // }
+
+    // const article = await
+  }
+
+  //게시글 삭제
 }
 
 //수정 (태그를 수정하냐, 게시글을 수정하냐)
