@@ -12,8 +12,7 @@ class ArticleRepository {
       order: [["id", "DESC"]],
     });
 
-    return { count, rows };
-  };
+  
 }
 
 module.exports = ArticleRepository;
