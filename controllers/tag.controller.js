@@ -8,6 +8,14 @@ class TagController {
 
     res.json(tags)
   }
+
+  findArticleByTag = async (req,res) => {
+    const {tag} = req.query
+
+    const article = await this.tagService.findArticleByTag(tag)
+
+    res.json(article)
+  }
 }
 
 module.exports = TagController;
