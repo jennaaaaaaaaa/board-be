@@ -30,7 +30,7 @@ class UserService {
     }
 
     const cookie = jwt.sign(
-      { id: user.id },
+      { id: user[0].id },
       jwtConfig.secretKey,
       jwtConfig.options
     );
