@@ -18,7 +18,7 @@ class ArticleController {
       user_id
     );
 
-    res.json(post)
+    res.json(post);
   };
 }
 
