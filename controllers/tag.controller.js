@@ -12,9 +12,9 @@ class TagController {
   findArticleByTag = async (req,res) => {
     const {tag} = req.query
 
-    const article = await this.tagService.findArticleByTag(tag)
+    const {mappingArticle, searchTag} = await this.tagService.findArticleByTag(tag)
 
-    res.json(article)
+    res.json({searchTag, mappingArticle})
   }
 }
 

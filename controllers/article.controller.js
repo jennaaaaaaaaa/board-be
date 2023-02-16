@@ -5,9 +5,9 @@ class ArticleController {
 
   findAllArticles = async (req, res) => {
     const page = req.query.page || 1;
-    const { rows, firstPage, lastPage, totalPage } =
+    const { articles, firstPage, lastPage, totalPage } =
       await this.articleService.findAllArticles(page);
-    res.json({ rows, firstPage, lastPage, totalPage });
+    res.json({ articles, firstPage, lastPage, totalPage });
   };
 }
 

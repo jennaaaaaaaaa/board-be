@@ -1,11 +1,11 @@
-const { Article } = require("../models");
-const ArticleRepository = require("../repositorys/article.repository")
+const { Article, User } = require("../models");
+const ArticleRepository = require("../repositorys/article.repository");
 
 class ArticleService {
-  articleRepository = new ArticleRepository(Article)
+  articleRepository = new ArticleRepository(Article, User);
 
   findAllArticles = async (page) => {
-    const {count, rows} = await this.articleRepository.findAllArticles(page)
+    const { count, rows } = await this.articleRepository.findAllArticles(page);
 
     // 총 페이지 수 : 한 페이지당 8개의 주문내역
     let totalPage = Math.ceil(count / 8);
@@ -21,18 +21,20 @@ class ArticleService {
 
     // 만약 마지막 페이지 번호가 총 페이지 수 보다 크다면?
     if (lastPage > totalPage) {
-        lastPage = totalPage;
+      lastPage = totalPage;
     }
+
+    const articles = rows.map((row) => {
+      return { title : row.title, contents : row.contents, count: row.count, author: row.User.email, createdAt: row.createdAt };
+    });
 
     return {
-      rows,
+      articles,
       firstPage,
       lastPage,
-      totalPage
-    }
-  }
-
-  
+      totalPage,
+    };
+  };
 }
 
-module.exports = ArticleService
+module.exports = ArticleService;

@@ -1,9 +1,9 @@
-const { Tag, Article_Tag_Mapping, Article } = require("../models");
+const { Tag, Article_Tag_Mapping, Article, User } = require("../models");
 const TagRepository = require("../repositorys/tag.repository");
-const client = require("../util/redis")
+const client = require("../util/redis");
 
 class TagService {
-  tagRepository = new TagRepository(Tag, Article_Tag_Mapping, Article);
+  tagRepository = new TagRepository(Tag, Article_Tag_Mapping, Article, User);
 
   tags = async () => {
     const Allcount = await this.tagRepository.countTag();
@@ -21,18 +21,18 @@ class TagService {
     return names;
   };
 
-  redis = (async() => {
+  redis = (async () => {
     while (true) {
-      const todayTop10 = await this.tags()
-  
+      const todayTop10 = await this.tags();
+
       await new Promise((resolve) => {
         for (let i = 0; i < todayTop10.length; i++) {
-          client.set(`${i}`, todayTop10[i].name)
+          client.set(`${i}`, todayTop10[i].name);
         }
-        setTimeout(resolve, 86400000)
-      })
+        setTimeout(resolve, 86400000);
+      });
     }
-  })()
+  })();
 
   getRedis = async () => {
     let cacheArr = [];
@@ -44,17 +44,27 @@ class TagService {
         const tag = await client.get(`${i}`);
         cacheArr.push(tag);
       }
-      return cacheArr
+      return cacheArr;
     }
 
-    this.tags()
-  }
+    this.tags();
+  };
 
   findArticleByTag = async (tag) => {
-    const articles = await this.tagRepository.findArticleByTag(tag)
+    const searchArticles = await this.tagRepository.findArticleByTag(tag);
+    const articles = searchArticles[0].Article_Tag_Mappings;
+    const mappingArticle = articles.map((article) => {
+      return {
+        title: article.Article.title,
+        contents: article.Article.contents,
+        count: article.Article.count,
+        author: article.Article.User.email,
+        createdAt: article.Article.createdAt,
+      };
+    });
 
-    return {tag : articles[0].tag, articles : articles[0].Article_Tag_Mappings}
-  }
+    return {mappingArticle, searchTag : searchArticles[0].tag};
+  };
 }
 
 module.exports = TagService;
