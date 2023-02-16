@@ -6,7 +6,7 @@ class ArticleRepository {
 
   findAllArticles = async (page) => {
     const { count, rows } = await this.articleModel.findAndCountAll({
-      attributes: ["title", "contents", "count", "createdAt"],
+      attributes: ["id", "title", "contents", "count", "createdAt"],
       offset: (page - 1) * 8,
       limit: 8,
       order: [["id", "DESC"]],
