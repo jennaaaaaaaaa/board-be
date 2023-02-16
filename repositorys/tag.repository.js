@@ -1,8 +1,9 @@
 class ArticleRepository {
-  constructor(TagModel, Article_Tag_MappingModel, ArticleModel) {
+  constructor(TagModel, Article_Tag_MappingModel, ArticleModel, UserModel) {
     this.tagModel = TagModel;
     this.article_tag_mappingModel = Article_Tag_MappingModel;
     this.articleModel = ArticleModel;
+    this.userModel = UserModel;
   }
 
   countTag = async () => {
@@ -16,7 +17,7 @@ class ArticleRepository {
   findArticleByTag = async (tag) => {
     const a = await this.tagModel.findAll({
       where: {tag},
-      include: [{model: this.article_tag_mappingModel, include: [{model: this.articleModel}]}]
+      include: [{model: this.article_tag_mappingModel, include: [{model: this.articleModel, attributes: ["title", "contents", "count", "createdAt"], include: [{model: this.userModel, attributes: ["email"]}]}]}]
     })
     return a
   }
