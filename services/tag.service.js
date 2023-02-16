@@ -55,6 +55,7 @@ class TagService {
     const articles = searchArticles[0].Article_Tag_Mappings;
     const mappingArticle = articles.map((article) => {
       return {
+        id : article.Article.id,
         title: article.Article.title,
         contents: article.Article.contents,
         count: article.Article.count,
