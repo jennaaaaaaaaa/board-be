@@ -7,20 +7,31 @@ class ArticleRepository {
   }
 
   countTag = async () => {
-    return await this.article_tag_mappingModel.count({group: ['tag_id']})
-  }
+    return await this.article_tag_mappingModel.count({ group: ["tag_id"] });
+  };
 
   findTag = async (id) => {
-    return await this.tagModel.findByPk(id)
-  }
+    return await this.tagModel.findByPk(id);
+  };
 
   findArticleByTag = async (tag) => {
     const a = await this.tagModel.findAll({
-      where: {tag},
-      include: [{model: this.article_tag_mappingModel, include: [{model: this.articleModel, attributes: ["title", "contents", "count", "createdAt"], include: [{model: this.userModel, attributes: ["email"]}]}]}]
-    })
-    return a
-  }
+      where: { tag },
+      include: [
+        {
+          model: this.article_tag_mappingModel,
+          include: [
+            {
+              model: this.articleModel,
+              attributes: ["id", "title", "contents", "count", "createdAt"],
+              include: [{ model: this.userModel, attributes: ["email"] }],
+            },
+          ],
+        },
+      ],
+    });
+    return a;
+  };
 }
 
 module.exports = ArticleRepository;
