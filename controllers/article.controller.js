@@ -71,7 +71,7 @@ class ArticleController {
     // const article = await
   }
 
-  //게시글 삭제
+  //게시글 삭제ㅁㅁㅁㅁㅁㅁ
 }
 
 //수정 (태그를 수정하냐, 게시글을 수정하냐)
