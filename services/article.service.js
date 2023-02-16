@@ -25,7 +25,7 @@ class ArticleService {
     }
 
     const articles = rows.map((row) => {
-      return { title : row.title, contents : row.contents, count: row.count, author: row.User.email, createdAt: row.createdAt };
+      return { id : row.id, title : row.title, contents : row.contents, count: row.count, author: row.User.email, createdAt: row.createdAt };
     });
 
     return {
