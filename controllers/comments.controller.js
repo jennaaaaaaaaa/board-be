@@ -36,8 +36,10 @@ class CommentsController {
             return res.status(500).json({ message: "로그인 하세요" })
         }
 
+        const { id: user_id } = res.locals.user
+
         const { id } = req.params
-        const { message } = await this.commentsService.deleteOneComment(id)
+        const { message } = await this.commentsService.deleteOneComment(id, user_id)
 
         res.json({ message: message })
     }
@@ -48,9 +50,7 @@ class CommentsController {
             return res.status(500).json({ message: "로그인 하세요" })
         }
         const { id } = req.params
-
         const { id: user_id } = res.locals.user
-
         const { contents } = req.body
 
         const update = await this.commentsService.patchOneComment(id, user_id, contents)

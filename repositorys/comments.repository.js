@@ -11,8 +11,8 @@ class ArticleRepository {
         return await this.commentsModel.create({ article_id, user_id, contents })
     }
 
-    deleteComments = async (id, user_id) => {
-        return await this.commentsModel.destroy(user_id, { where: { id } })
+    deleteComments = async (id) => {
+        return await this.commentsModel.destroy({ where: { id } })
     }
 
     readCommentsByArticle = async (article_id) => {

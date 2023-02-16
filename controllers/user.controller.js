@@ -1,4 +1,4 @@
-const UserService = require("../services/users.service")
+const UserService = require("../services/user.service")
 const {signupValidation} = require("../middleware/validation")
 
 class UserController {

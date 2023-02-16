@@ -15,15 +15,17 @@ class ArticleRepository {
     return tags
   }
 
-  updateArticle = async (article_id) => {
-    return await this.articleModel.update({ title, contents, tags, email }, {
-      include: [{
-        model: this.article_tag_mappingModel, attributes: ['tag_id'],
+  updateArticle = async (title, contents, tags, email) => {
+    return await this.articleModel.update({ title, contents, tags, email },
+      { where: { id } },
+      {
         include: [{
-          model: this.tagModel, attributes: ['tag']
-        }]
-      }, { model: this.userModel, attributes: ['email'] }]
-    })
+          model: this.article_tag_mappingModel, attributes: ['tag_id'],
+          include: [{
+            model: this.tagModel, attributes: ['tag']
+          }]
+        }, { model: this.userModel, attributes: ['email'] }]
+      })
   }
 
   //매핑 테이블에 넣어야한다는게 tagid, articleid
@@ -31,10 +33,15 @@ class ArticleRepository {
     await this.article_tag_mappingModel.bulkCreate(mappings)
   }
 
-  findAllArticles = async () => {
-    return await this.articleModel.findAll({
+  findAllArticles = async (page) => {
+    const { count, rows } = await this.articleModel.findAndCountAll({
       attributes: ["title", "contents", "count"],
+      offset: (page - 1) * 8,
+      limit: 8,
+      order: [["id", "DESC"]],
     });
+
+    return { count, rows };
   };
 
   findOneArticle = async (article_id) => {
@@ -54,7 +61,10 @@ class ArticleRepository {
     })
   }
 
-  // updateArticle = async(title, contents, user_id) //작성자user_id
+  //맵핑테이블 article_id 삭제
+  mappingsDel = async (article_id) => {
+    return await this.article_tag_mappingModel.findByPk({ where: article_id })
+  }
 
 }
 

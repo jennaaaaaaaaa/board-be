@@ -1,23 +1,10 @@
-// const { resolve } = require("bluebird");
-// const redis = require("redis")
-// const ArticleRepository = require("../repository/article")
-// const articleRepository = new ArticleRepository();
+const redis = require("redis")
 
-// const client = redis.createClient();
+const client = redis.createClient();
 
-// client.on('error', err => console.log('Redis Client Error', err));
-// client.on('connect', () => console.log('Redis Client connect'));
+client.on('error', err => console.log('Redis Client Error', err));
+client.on('connect', () => console.log('Redis Client connect'));
 
-// const a = (async() => {
-//   await client.connect()
-//   while (true) {
-//     const count = await articleRepository.allCountPage()
+client.connect()
 
-//     await new Promise((resolve) => {
-//       client.set("articles_count", count)
-//       setTimeout(resolve, 180000)
-//     })
-//   }
-// })()
-
-// module.exports = {a, client}
+module.exports = client

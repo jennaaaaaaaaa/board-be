@@ -32,32 +32,28 @@ class ArticleService {
         // return this.commentsRepository.map
     }
 
-    deleteOneComment = async (id, user_id) => {
+    deleteOneComment = async (id, user_id) => { //값 받아오는것
         const getUserId = await this.commentsRepository.getCommentUserId(id)
 
         if (getUserId.user_id != user_id) {
             return { message: "본인만 삭제 가능" }
         }
 
-        await this.commentsRepository.deleteComments(id, user_id)
+        await this.commentsRepository.deleteComments(id) //값 보내주는 것
         return { message: "삭제 완료" }
     }
 
     patchOneComment = async (id, user_id, contents) => {
-        const updateComment = await this.commentsRepository.patchComments(id, contents)
+        const getUserId = await this.commentsRepository.getCommentUserId(id)
 
-        return updateComment.map(comment => {
-            return {
-                contents: comment.contents,
-                article_id: comment.article_id,
-                user_id: comment.user_id,
-                createdAt: comment.createdAt
-            }
-        })
+        if (getUserId.user_id != user_id) {
+            return { message: "본인만 삭제 가능" }
+        }
+
+        await this.commentsRepository.patchComments(id, contents)
+
+        return { message: "수정 완료" }
     }
-
-
-
 }
 
 module.exports = ArticleService
