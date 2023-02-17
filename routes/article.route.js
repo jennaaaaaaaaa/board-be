@@ -11,8 +11,8 @@ router.get("/:id", articleController.findOneArticle)
 //게시글 작성
 router.post("/", authMiddleware, articleController.postArticle)
 //게시글 수정
-router.patch("/:id")
+router.patch("/:id", authMiddleware, articleController.patchArticle)
 //게시글 삭제
-router.delete("/:id")
+router.delete("/:id", authMiddleware, articleController.deleteArticle)
 
 module.exports = router

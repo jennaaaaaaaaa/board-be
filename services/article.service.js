@@ -1,11 +1,11 @@
-const { Article, Tag, Article_Tag_Mapping, User } = require("../models");
+const { Article, Tag, Article_Tag_Mapping, User, Comments } = require("../models");
 const ArticleRepository = require("../repositorys/article.repository")
 
 class ArticleService {
-  articleRepository = new ArticleRepository(Article, Tag, Article_Tag_Mapping, User)
+  articleRepository = new ArticleRepository(Article, Tag, Article_Tag_Mapping, User, Comments)
 
   findAllArticles = async (page) => {
-    const { count, rows } = await this.articleRepository.findAllArticles(page)
+    const { count, rows } = await this.articleRepository.findAllArticles(page);
 
     // 총 페이지 수 : 한 페이지당 8개의 주문내역
     let totalPage = Math.ceil(count / 8);
@@ -23,13 +23,19 @@ class ArticleService {
     if (lastPage > totalPage) {
       lastPage = totalPage;
     }
+
+    const articles = rows.map((row) => {
+      return { id: row.id, title: row.title, contents: row.contents, count: row.count, author: row.User.email, createdAt: row.createdAt };
+    });
+
     return {
-      rows,
+      articles,
       firstPage,
       lastPage,
-      totalPage
-    }
-  }
+      totalPage,
+    };
+  };
+
 
   findOneArticle = async (article_id) => {
     const article = await this.articleRepository.findOneArticle(article_id)
@@ -45,10 +51,19 @@ class ArticleService {
     const article = await this.articleRepository.findTagByArticle(article_id)
   }
 
-  patchArticle = async (article_id, tag_id) => {
-    const find = await this.articleRepository.findOneArticle(article_id, tag_id)
+  patchArticle = async (article_id, title, contents, tags, user_id) => {
+    const find = await this.articleRepository.findOneArticle(article_id)
 
-    if (find.tag_id !== req.body.tags) {
+    if (user_id !== find.user_id) {
+      return { message: "본인 아님" }
+    }
+
+    let tags_array = []
+    for (let i = 0; i < find.Article_Tag_Mappings.length; i++) {
+      tags_array.push(find.Article_Tag_Mappings[i].Tag.tag) //push 배열에 추가
+    }
+
+    if (tags_array !== tags) {
       await this.articleRepository.mappingsDel(article_id)
 
       const tag = await Promise.all(tags.map(async (tag) => {
@@ -56,15 +71,15 @@ class ArticleService {
         return tagFindCreate.id
       }))
 
-      const updateArticle = await this.articleRepository.updateArticle(title, contents, mappings, email)
-
       const mappings = await Promise.all(tag.map(async (tag) => ({
         tag_id: tag,
-        article_id: updateArticle.id
+        article_id: article_id
       })))
 
       await this.articleRepository.tagsInstance(mappings)
     }
+    await this.articleRepository.updateArticle(title, contents, article_id)
+
     return { message: "수정완료" }
 
   }
@@ -95,23 +110,33 @@ class ArticleService {
   }
 
   mappingsDel = async (article_id) => {
+    const find = await this.articleRepository.findOneArticle(article_id)
+
     return await this.articleRepository.mappingsDel(article_id)
   }
 
+  deleteArticle = async (id, user_id) => {
+    const find = await this.articleRepository.findOneArticle(id)
 
+    if (user_id !== find.user_id) {
+      return { message: "본인 아님" }
+    }
+    return await this.articleRepository.deleteArticles(id)
+  }
+  deleteComment = async (id, article_id) => {
+    // const find = await this.articleRepository.findOneArticle(id)
+
+    return await this.articleRepository.deleteComments(id, article_id)
+
+  }
+
+
+  아
 }
+
 
 module.exports = ArticleService
 
 // 수정시 맵핑 테이블 에서 둘다 들ㅇ고 와서 태그 같은지 확인하고 타이틀 콘텐츠 같은지 확인하고
 // 태그가 다르다면 맵핑 테이블에서 where :article_id 를 destroy(다 지움)하고 맵핑 태이블에
 // 태그를 다시 인설트 insert
-
-//삭제하고 findorcreate, tagsInstance => update
-
-// const title = req.body.title || article.title
-// const contents = req.body.contents || article.contents
-
-// const modifyTitle = title || article.title
-
-// await updateArticle(id, title, contents)

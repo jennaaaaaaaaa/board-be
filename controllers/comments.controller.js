@@ -10,7 +10,7 @@ class CommentsController {
             return res.status(500).json({ message: "로그인 하세요" })
         }
 
-        const { article_id } = req.params //comment에 article_id가 null값으로 들어옴 이유
+        const { article_id } = req.params
         const { contents } = req.body
         const { id: user_id } = res.locals.user
 

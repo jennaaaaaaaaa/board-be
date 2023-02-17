@@ -46,8 +46,9 @@ class ArticleService {
     patchOneComment = async (id, user_id, contents) => {
         const getUserId = await this.commentsRepository.getCommentUserId(id)
 
-        if (getUserId.user_id != user_id) {
-            return { message: "본인만 삭제 가능" }
+
+        if (getUserId.user_id !== user_id) {
+            return { message: "본인만 수정 가능" }
         }
 
         await this.commentsRepository.patchComments(id, contents)
