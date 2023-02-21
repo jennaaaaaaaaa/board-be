@@ -16,7 +16,7 @@ class ArticleRepository {
     }
 
     readCommentsByArticle = async (article_id) => {
-        return await this.commentsModel.findAll({ where: { article_id } })
+        return await this.commentsModel.findAll({ where: { article_id }, include: [{ model: this.userModel, attributes: ["email"] }] })
     }
 
     patchComments = async (id, contents) => {

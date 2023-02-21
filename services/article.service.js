@@ -49,13 +49,14 @@ class ArticleService {
 
   findTagByArticle = async (article_id) => {
     const article = await this.articleRepository.findTagByArticle(article_id)
+    return article
   }
 
   patchArticle = async (article_id, title, contents, tags, user_id) => {
     const find = await this.articleRepository.findOneArticle(article_id)
 
     if (user_id !== find.user_id) {
-      return { message: "본인 아님" }
+      return {status : 401,message: "본인 아님" }
     }
 
     let tags_array = []
@@ -65,7 +66,6 @@ class ArticleService {
 
     if (tags_array !== tags) {
       await this.articleRepository.mappingsDel(article_id)
-
       const tag = await Promise.all(tags.map(async (tag) => {
         const tagFindCreate = await this.articleRepository.findOrCreate(tag)
         return tagFindCreate.id
@@ -80,7 +80,7 @@ class ArticleService {
     }
     await this.articleRepository.updateArticle(title, contents, article_id)
 
-    return { message: "수정완료" }
+    return { status: 200,message: "수정완료" }
 
   }
 
@@ -119,19 +119,16 @@ class ArticleService {
     const find = await this.articleRepository.findOneArticle(id)
 
     if (user_id !== find.user_id) {
-      return { message: "본인 아님" }
+      return {status : 401, message: "본인 아님" }
     }
     return await this.articleRepository.deleteArticles(id)
   }
   deleteComment = async (id, article_id) => {
     // const find = await this.articleRepository.findOneArticle(id)
 
-    return await this.articleRepository.deleteComments(id, article_id)
-
+    await this.articleRepository.deleteComments(id, article_id)
+    return { status: 200,message: "삭제" }
   }
-
-
-  아
 }
 
 

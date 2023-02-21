@@ -51,9 +51,9 @@ class ArticleController {
     const { id: article_id } = req.params
     const { title, contents, tags } = req.body;
 
-    const modify = await this.articleService.patchArticle(article_id, title, contents, tags, user_id)
+    const {status, message} = await this.articleService.patchArticle(article_id, title, contents, tags, user_id)
 
-    res.json({ data: modify })
+    res.status(status).json(message)
 
   }
 
@@ -68,11 +68,11 @@ class ArticleController {
     const { id: user_id } = res.locals.user;
     const { id: article_id } = req.params
 
-    const del = await this.articleService.mappingsDel(article_id, user_id)
-    const dels = await this.articleService.deleteArticle(article_id, user_id)
-    const delscomment = await this.articleService.deleteComment(article_id)
+    await this.articleService.mappingsDel(article_id, user_id)
+    const {status,message} = await this.articleService.deleteArticle(article_id, user_id)
+    await this.articleService.deleteComment(article_id)
 
-    res.json({ data: del, dels, delscomment })
+    res.status(status || 200).json(message)
 
   }
 }

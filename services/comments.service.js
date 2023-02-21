@@ -22,9 +22,10 @@ class ArticleService {
 
         return comment.map(comment => {
             return {
+                id: comment.id,
                 contents: comment.contents,
                 article_id: comment.article_id,
-                user_id: comment.user_id,
+                user_id: comment.User.email,
                 createdAt: comment.createdAt
             }
         })
