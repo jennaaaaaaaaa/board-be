@@ -6,6 +6,7 @@ const ArticleController = require("../controllers/article.controller")
 const articleController = new ArticleController()
 const authMiddleware = require("../middleware/auth")
 
+router.get("/", articleController.findAllArticles)
 //게시글 상세조회
 router.get("/:id", articleController.findOneArticle)
 //게시글 작성

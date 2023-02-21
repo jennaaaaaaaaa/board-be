@@ -26,6 +26,7 @@ class TagService {
       const todayTop10 = await this.tags();
 
       await new Promise((resolve) => {
+        client.FLUSHALL();
         for (let i = 0; i < todayTop10.length; i++) {
           client.set(`${i}`, todayTop10[i].name);
         }
