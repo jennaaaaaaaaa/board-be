@@ -1,7 +1,7 @@
 const { User, Article } = require("../models");
 const UserRepository = require("../repositorys/user.repository");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { jwtConfig } = require("../util/config");
 
 class UserService {
