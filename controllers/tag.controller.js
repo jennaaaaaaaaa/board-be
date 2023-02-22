@@ -5,7 +5,7 @@ class TagController {
 
   top10 = async (req,res) => {
     const tags = await this.tagService.getRedis()
-
+    
     res.json(tags)
   }
 

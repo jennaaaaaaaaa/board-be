@@ -17,7 +17,7 @@ class TagService {
         return { name: name.tag };
       })
     );
-
+    
     return names;
   };
 
@@ -48,7 +48,20 @@ class TagService {
       return cacheArr;
     }
 
-    this.tags();
+    const Allcount = await this.tagRepository.countTag();
+    const top10 = Allcount.sort((a, b) => {
+      return b.count - a.count;
+    }).slice(0, 10);
+
+    let result = []
+    await Promise.all(
+      top10.map(async (tag) => {
+        const name = await this.tagRepository.findTag(tag.tag_id);
+        return result.push(name.tag)
+      })
+    );
+
+    return result
   };
 
   findArticleByTag = async (tag) => {
