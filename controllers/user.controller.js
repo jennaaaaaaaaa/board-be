@@ -20,6 +20,10 @@ class UserController {
 
   login = async (req,res) => {
     const {email, password} = req.body
+    
+    if (!email|| !password) {
+      return res.status(401).json()
+    }
 
     const {status, message, cookie} = await this.userService.login(email, password)
 
