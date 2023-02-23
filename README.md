@@ -137,6 +137,7 @@ TOOL
 ```
 ## 캐시
 사용 툴 : Redis
+
 Redis 의 특징 : 메모리 기반으로 빠르게 데이터를 읽어올 수 있는 Key-Value Store
 
 ## 🔎jmeter
