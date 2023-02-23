@@ -146,15 +146,18 @@ Redis 의 특징 : 메모리 기반으로 빠르게 데이터를 읽어올 수 �
 **캐시사용x**
 
 ![캐시 사용X 오늘의 태그 조회](https://user-images.githubusercontent.com/118159400/220608773-25c823f7-00b9-4ac4-b4b1-45becc97066d.png)
+시간이 최소 243ms 과 최대 22547ms의 시간이 걸렸습니다. 
 
 
 **캐시사용o**
 
 ![image](https://user-images.githubusercontent.com/111362623/220600496-0ba81ea9-171f-4714-8bcb-203a8d7711f0.png)
+그의 반면 캐시를 사용 했을 시 최소 1ms 최대 7ms이라는 시간이 걸렸습니다. 
 
 **테스트 조건**
 
 ![image](https://user-images.githubusercontent.com/111362623/220600285-1d1e36fe-18cf-4eb2-a145-039e3292117a.png)
+게시판의 이용자가 늘어나고 페이지 이동이 많아지거나 새로고침을 할 수록 캐시를 사용하지 않을 경우 이용자들의 화면에 뜨는 시간이 오래 걸림을 알 수 있습니다.
 
 
 
