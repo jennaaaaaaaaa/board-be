@@ -135,31 +135,32 @@ TOOL
 └─app.js
 
 ```
-## 캐시
-사용 툴 : Redis
-
-Redis 의 특징 : 메모리 기반으로 빠르게 데이터를 읽어올 수 있는 Key-Value Store
 
 ## 🔎jmeter
 메인 페이지에서 볼 수 있는 태그를 페이지 이동할 때마다 api로 계속 호출을 하면 데이터양이 적을 때는 그 차이를 못 느낄 수 있겠지만 tag의 양과 article의 양이 많아지면 많아질수록 페이지 이동에 대한 부담이 커질 것 같다는 생각이 들었습니다. 글을 쓰는 현시점 총 게시글의 수는 5070개, 태그의 수는 23이다. 둘이 조합된 수는 15140개입니다. 매번 페이지를 이동할 때마다 15140개의 조합들을 count 하지 않고 캐시에 하루에 한 번씩 count 해서 많이 사용된 top 10의 tag를 저장을 한 뒤 꺼내 쓸 수 있도록 해봤습니다.
 
+**테스트 조건**
+
+![image](https://user-images.githubusercontent.com/111362623/220600285-1d1e36fe-18cf-4eb2-a145-039e3292117a.png)
+
 **캐시사용x**
 
 ![캐시 사용X 오늘의 태그 조회](https://user-images.githubusercontent.com/118159400/220608773-25c823f7-00b9-4ac4-b4b1-45becc97066d.png)
-시간이 최소 243ms 과 최대 22547ms의 시간이 걸렸습니다. 
 
 
 **캐시사용o**
 
 ![image](https://user-images.githubusercontent.com/111362623/220600496-0ba81ea9-171f-4714-8bcb-203a8d7711f0.png)
-그의 반면 캐시를 사용 했을 시 최소 1ms 최대 7ms이라는 시간이 걸렸습니다. 
 
-**테스트 조건**
-
-![image](https://user-images.githubusercontent.com/111362623/220600285-1d1e36fe-18cf-4eb2-a145-039e3292117a.png)
-게시판의 이용자가 늘어나고 페이지 이동이 많아지거나 새로고침을 할 수록 캐시를 사용하지 않을 경우에는 이용자들의 화면에 뜨는 시간이 오래 걸림을 알 수 있습니다. 그에 비해 캐시를 사용한 경우 안정적으로 해당 요청을 처리할 수 있음을 알 수 있습니다.
+🌟결과적으로 캐시를 사용하기 전에 비해 사용했을때 약 1000퍼 향상된 효과를 얻을 수 있는걸 확인 할 수 있습니다
 
 
+## ⚙️Initial Setup
 
-  
-[frontend기능](https://github.com/MinseokJoo/board-fe)
+```
+npm install
+npx sequelize-cli db:migrate
+```
+
+
+[backend기능](https://github.com/jennaaaaaaaaa/board-be)
