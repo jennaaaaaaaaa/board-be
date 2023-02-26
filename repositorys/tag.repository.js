@@ -15,7 +15,7 @@ class ArticleRepository {
   };
 
   findArticleByTag = async (tag) => {
-    const a = await this.tagModel.findAll({
+    const a = await this.tagModel.findOne({
       where: { tag },
       include: [
         {

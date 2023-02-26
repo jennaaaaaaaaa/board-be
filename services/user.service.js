@@ -3,6 +3,7 @@ const UserRepository = require("../repositorys/user.repository");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { jwtConfig } = require("../util/config");
+const CustomError = require("../util/customError")
 
 class UserService {
   userRepository = new UserRepository(User, Article);
@@ -11,22 +12,26 @@ class UserService {
     const alreadyUser = await this.userRepository.findUser(email);
 
     if (alreadyUser[0]) {
-      return { status: 409 };
+      throw new CustomError(409, "이미 존재하는 이메일입니다.")
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
     await this.userRepository.signup(name, email, hashedPassword);
-    return { status: 201, message: "회원가입 성공!" };
+    return true
   };
 
   login = async (email, password) => {
     const user = await this.userRepository.findUser(email);
 
+    if (!user[0]) {
+      throw new CustomError(400, "존재하지 않는 이메일입니다.")
+    }
+    
     const isPasswordCorrect = await bcrypt.compare(password, user[0].password);
-
-    if (!user || !isPasswordCorrect) {
-      return { status: 400 };
+    
+    if (!isPasswordCorrect) {
+      throw new CustomError(400, "잘못된 비밀번호입니다.")
     }
 
     const cookie = jwt.sign(
@@ -35,13 +40,11 @@ class UserService {
       jwtConfig.options
     );
 
-    return { status: 200, message: "로그인", cookie };
+    return cookie
   };
 
   getUserInfo = async (id) => {
-    const info = await this.userRepository.userInfoAndArticles(id);
-
-    return { status: 200, info };
+    return await this.userRepository.userInfoAndArticles(id);
   };
 }
 

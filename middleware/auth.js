@@ -18,7 +18,7 @@ const authMiddleware = async (req, res, next) => {
       throw new Error("회원이 존재하지 않습니다.");
     }
 
-    res.locals.user = user;
+    res.locals.user = {user_id : user.id};
     next();
   } catch (err) {
     res.clearCookie();

@@ -11,14 +11,15 @@ class TagService {
       return b.count - a.count;
     }).slice(0, 10);
 
-    const names = await Promise.all(
+    let arr = []
+    await Promise.all(
       top10.map(async (tag) => {
         const name = await this.tagRepository.findTag(tag.tag_id);
-        return { name: name.tag };
+        return arr.push(name.tag);
       })
     );
     
-    return names;
+    return arr.join();
   };
 
   redis = (async () => {
@@ -27,25 +28,16 @@ class TagService {
 
       await new Promise((resolve) => {
         client.FLUSHALL();
-        for (let i = 0; i < todayTop10.length; i++) {
-          client.set(`${i}`, todayTop10[i].name);
-        }
+        client.set("todayTags", todayTop10)
         setTimeout(resolve, 86400000);
       });
     }
   })();
 
   getRedis = async () => {
-    let cacheArr = [];
-
-    const cacheLength = await client.dbSize();
-
-    if (cacheLength > 0) {
-      for (let i = 0; i < cacheLength; i++) {
-        const tag = await client.get(`${i}`);
-        cacheArr.push(tag);
-      }
-      return cacheArr;
+    const tag = await client.get("todayTags")
+    if (tag) {
+      return tag.split(",");
     }
 
     const Allcount = await this.tagRepository.countTag();
@@ -66,19 +58,19 @@ class TagService {
 
   findArticleByTag = async (tag) => {
     const searchArticles = await this.tagRepository.findArticleByTag(tag);
-    const articles = searchArticles[0].Article_Tag_Mappings;
+    const articles = searchArticles.Article_Tag_Mappings;
     const mappingArticle = articles.map((article) => {
       return {
         id : article.Article.id,
         title: article.Article.title,
         contents: article.Article.contents,
         count: article.Article.count,
-        author: article.Article.User.email,
+        author: !article.Article.User? "탈퇴한 회원" : article.Article.User.email,
         createdAt: article.Article.createdAt,
       };
     });
 
-    return {mappingArticle, searchTag : searchArticles[0].tag};
+    return {mappingArticle, searchTag : searchArticles.tag};
   };
 }
 

@@ -12,5 +12,8 @@ app.use(express.json(), cookieParser(), cors(corsOptions))
 
 app.use("/api", router)
 
+app.use((err, req, res, next) => {
+  res.status(err.code || 500).json({message: err.message})
+})
 
 app.listen(5000, () => console.log(5000, "번 서버 열림"))
